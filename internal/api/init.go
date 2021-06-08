@@ -1,7 +1,7 @@
 package api
 
 import (
-	middleware "cloudpan/internal/middleware"
+	"cloudpan/internal/middleware"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

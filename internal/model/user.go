@@ -1,7 +1,7 @@
 package model
 
 import (
-	util "cloudpan/internal/util"
+	"cloudpan/internal/util"
 	"errors"
 	"github.com/jinzhu/gorm"
 )

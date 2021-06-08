@@ -1,7 +1,7 @@
 package api
 
 import (
-	model "cloudpan/internal/model"
+	"cloudpan/internal/model"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"

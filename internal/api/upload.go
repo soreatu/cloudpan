@@ -1,8 +1,8 @@
 package api
 
 import (
-	model "cloudpan/internal/model"
-	util "cloudpan/internal/util"
+	"cloudpan/internal/model"
+	"cloudpan/internal/util"
 	"fmt"
 	"io"
 	"net/http"
