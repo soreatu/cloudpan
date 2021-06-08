@@ -3,6 +3,7 @@ package api
 import (
 	"cloudpan/internal/model"
 	"cloudpan/internal/util"
+	"encoding/base64"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -47,9 +48,10 @@ func Download(c *gin.Context) {
 	// 返回解密结果
 	c.Writer.WriteHeader(http.StatusOK)
 	c.Header("Content-Disposition", "attachment; filename="+file.Filename)
-	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Type", "application/octet-stream; charset=UTF-8")
 	c.Header("Accept-Length", fmt.Sprintf("%d", file.Size))
-	c.Writer.Write(content)
+	// 通过base64形式返回给前端解析
+	c.Writer.Write([]byte(base64.StdEncoding.EncodeToString(content)))
 }
 
 func readFile(filename string, size int64) ([]byte, error) {
