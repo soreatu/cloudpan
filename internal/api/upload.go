@@ -41,7 +41,7 @@ func Upload(c *gin.Context) {
 		return
 	}
 	_ = src.Close()
-	util.Log().Info(fmt.Sprintf("Before encryption: (%d)", len(content)))
+	util.Log().Info(fmt.Sprintf("Before encryption: size %d, md5sum %s", len(content), util.MD5(content)))
 
 	// 对文件内容进行加密
 	encrypted, err := util.EncryptFile(content, user.Key)
@@ -50,7 +50,7 @@ func Upload(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "encrypt file error!"})
 		return
 	}
-	util.Log().Info(fmt.Sprintf("After encryption: (%d)", len(encrypted)))
+	util.Log().Info(fmt.Sprintf("After encryption: size %d, md5sum %s", len(encrypted), util.MD5(encrypted)))
 
 	// 将文件加密结果保存到磁盘文件中
 	name := strings.Split(path.Base(file.Filename), ".")[0]
@@ -75,7 +75,7 @@ func Upload(c *gin.Context) {
 }
 
 func saveFile(content []byte, filename string) error {
-	dst, err := os.Create("upload/" + filename)
+	dst, err := os.Create(os.Getenv("UPLOAD_DIR") + "/" + filename)
 	if err != nil {
 		return err
 	}

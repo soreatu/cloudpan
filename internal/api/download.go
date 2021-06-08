@@ -1,8 +1,8 @@
 package api
 
 import (
-	model "cloudpan/internal/model"
-	util2 "cloudpan/internal/util"
+	"cloudpan/internal/model"
+	"cloudpan/internal/util"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -31,18 +31,18 @@ func Download(c *gin.Context) {
 	// 从磁盘中读取加密文件
 	encrypted, err := readFile(file.Filename, file.Size)
 	if err != nil {
-		util2.Log().Warning("read file error", err)
+		util.Log().Warning("read file error", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "read file error!"})
 		return
 	}
-	util2.Log().Info(fmt.Sprintf("Before decryption: (%d)", len(encrypted)))
+	util.Log().Info(fmt.Sprintf("Before decryption: size %d, md5sum %s", len(encrypted), util.MD5(encrypted)))
 
 	// 对文件内容进行解密
-	content, err := util2.DecryptFile(encrypted, user.Key)
+	content, err := util.DecryptFile(encrypted, user.Key)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "decrypt file error!"})
 	}
-	util2.Log().Info(fmt.Sprintf("After decryption: (%d)", len(content)))
+	util.Log().Info(fmt.Sprintf("After decryption: size %d, md5sum %s", len(content), util.MD5(content)))
 
 	// 返回解密结果
 	c.Writer.WriteHeader(http.StatusOK)
@@ -55,7 +55,7 @@ func Download(c *gin.Context) {
 func readFile(filename string, size int64) ([]byte, error) {
 	content := make([]byte, size+16)
 
-	src, err := os.Open("upload/" + filename)
+	src, err := os.Open(os.Getenv("UPLOAD_DIR") + "/" + filename)
 	defer src.Close()
 	if err != nil {
 		return nil, err

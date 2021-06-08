@@ -36,7 +36,7 @@ func DeleteFile(c *gin.Context) {
 	}
 
 	// 删除磁盘中的文件
-	if err = os.Remove("upload/" + file.Filename); err != nil {
+	if err = os.Remove(os.Getenv("UPLOAD_DIR") + "/" + file.Filename); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"msg": "Delete file error!"})
 		return
 	}

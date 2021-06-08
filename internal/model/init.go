@@ -2,9 +2,11 @@ package model
 
 import (
 	"encoding/gob"
+	"fmt"
 	"github.com/gorilla/securecookie"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gorilla/sessions"
 	"github.com/jinzhu/gorm"
@@ -31,6 +33,19 @@ func Init() {
 
 	// 设置session store
 	SetupSession()
+
+	// 创建upload和session目录
+	dirs := []string{os.Getenv("UPLOAD_DIR"), os.Getenv("SESSION_DIR")}
+	for _, dir := range dirs {
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			path := filepath.Join(".", dir)
+			fmt.Println(path)
+			err = os.MkdirAll(path, 0755)
+			if err != nil {
+				panic(err)
+			}
+		}
+	}
 }
 
 // sqlite3Conn 连接到sqlite3数据库

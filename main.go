@@ -1,9 +1,9 @@
 package main
 
 import (
-	api2 "cloudpan/internal/api"
-	conf2 "cloudpan/internal/conf"
-	model2 "cloudpan/internal/model"
+	api "cloudpan/internal/api"
+	conf "cloudpan/internal/conf"
+	model "cloudpan/internal/model"
 	"net/http"
 )
 
@@ -12,11 +12,11 @@ func main() {
 	go http.ListenAndServe(":8080", http.FileServer(http.Dir("frontend/")))
 
 	// 读取配置文件
-	conf2.Init()
+	conf.Init()
 	// 连接数据库
-	model2.Init()
+	model.Init()
 
 	// 装载后端路由
-	r := api2.NewRouter()
+	r := api.NewRouter()
 	r.Run(":8081")
 }
